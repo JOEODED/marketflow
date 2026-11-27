@@ -18,5 +18,6 @@ import org.springframework.web.cors.*;
    .exceptionHandling(e->e.authenticationEntryPoint((q,r,x)->r.sendError(401)))
    .addFilterBefore(f,UsernamePasswordAuthenticationFilter.class);return http.build();}
  @Bean PasswordEncoder encoder(){return new BCryptPasswordEncoder();}
- @Bean CorsConfigurationSource cors(@Value("${app.cors-origin}") String o){CorsConfiguration c=new CorsConfiguration();c.setAllowedOrigins(List.of(o));c.setAllowedMethods(List.of("*"));c.setAllowedHeaders(List.of("*"));UrlBasedCorsConfigurationSource s=new UrlBasedCorsConfigurationSource();s.registerCorsConfiguration("/**",c);return s;}
+ /** Bean name must be exactly corsConfigurationSource so Spring Security's cors() picks it up. */
+ @Bean("corsConfigurationSource") CorsConfigurationSource corsConfigurationSource(@Value("${app.cors-origin}") String o){CorsConfiguration c=new CorsConfiguration();c.setAllowedOrigins(List.of(o));c.setAllowedMethods(List.of("*"));c.setAllowedHeaders(List.of("*"));UrlBasedCorsConfigurationSource s=new UrlBasedCorsConfigurationSource();s.registerCorsConfiguration("/**",c);return s;}
 }
